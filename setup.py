@@ -13,10 +13,12 @@ extra_compile_args = [
     '-fno-strict-aliasing',
     '-fno-rtti',
 ]
+extra_link_args = []
 
 if platform.system() == 'Darwin':
     extra_compile_args += ['-mmacosx-version-min=10.7', '-stdlib=libc++']
-
+    if [int(v) for v in platform.mac_ver()[0].split('.')] >= [10, 9, 0]:
+        extra_link_args += ['-stdlib=libc++']
 
 setup(
     name="python-rocksdb",
@@ -35,6 +37,7 @@ setup(
         'rocksdb._rocksdb',
         ['rocksdb/_rocksdb.pyx'],
         extra_compile_args=extra_compile_args,
+        extra_link_args=extra_link_args,
         language='c++',
         libraries=['rocksdb', 'snappy', 'bz2', 'z', 'lz4'],
     )],
